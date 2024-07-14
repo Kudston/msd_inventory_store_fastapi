@@ -1,0 +1,45 @@
+# Use postgres/example user/password credentials
+version: '3.1'
+
+services:
+  inventory_system_api:
+    container_name: inventory_system
+    image: inventory_system
+    restart: unless-stopped
+    ports:
+      - 8000:8500 # tcp
+      - 8101:8101 # ssl
+    build: 
+      context: ../
+      dockerfile: Dockerfile
+
+    volumes:
+      - ./..:/usr/src/inventory_system
+
+    command: uvicorn src.main:app --reload --port 8500 --host 0.0.0.0
+
+    environment:
+      - APP_NAME=inventory_system
+      - db_name=inventory_system
+      - db_user=inventory_system
+      - db_password=inventory_system_password
+      - db_host=inventory_db
+      - db_port=5432
+
+    depends_on:
+      - inventory_db
+  
+  inventory_db:
+    container_name: inventory_db
+    image: postgres:latest
+    restart: always
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_PASSWORD=inventory_system_password
+      - POSTGRES_USER=inventory_system
+
+networks:
+  default:
+    external: true
+    name: inventory_system_network
