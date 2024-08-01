@@ -2,9 +2,9 @@ from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
-from src.config import Settings
+from src.backends.config import Settings
 from alembic import context
-from src.products.models import *
+from src.backends.orders.models import *
 
 app_settings = Settings()
 # this is the Alembic Config object, which provides
@@ -24,7 +24,7 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-target_metadata = [Products.metadata]
+target_metadata = [Orders.metadata]
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
