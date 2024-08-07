@@ -3,3 +3,4 @@ __pycache__
 db_mount_location/*
 msd_db_mount_location
 nohup.out
+.vscode
