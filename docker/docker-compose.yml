@@ -4,29 +4,28 @@ version: '3.1'
 services:
   inventory_system_frontend:
     container_name: inventory_system_frontend
-    image: inventory_system
+    image: inventory_system_frontend
     restart: unless-stopped
-    ports:
-      - 8200:8600
+
     build:
-      context: ../
+      context: ./../src/frontend
       dockerfile: Dockerfile
 
     volumes:
-      - ./..:/usr/src/inventory_system
+      - ./../src/frontend:/app
 
-    command: uvicorn src.frontend.main:app --reload --port 8600 --host 0.0.0.0
+    command: nohup npm start > outputs.log 2>&1 &
 
     depends_on:
       - inventory_system_api
 
   inventory_system_api:
-    container_name: inventory_system
+    container_name: inventory_system_api
     image: inventory_system
     restart: unless-stopped
-    ports:
-      - 8000:8500 # tcp
-      - 8101:8101 # ssl
+    # ports:
+    #   - 8000:8500 # tcp
+    #   - 8101:8101 # ssl
     build: 
       context: ../
       dockerfile: Dockerfile
@@ -49,20 +48,20 @@ services:
 
     depends_on:
       - inventory_db
-  
+
   inventory_db:
     container_name: inventory_db
     image: postgres:latest
     restart: always
     volumes:
-      - ./../../msd_db_mount_location/:/var/lib/postgresql/data
+      - ./../msd_db_mount_location/:/var/lib/postgresql/data
 
     ports:
       - '5432:5432'
     environment:
       - POSTGRES_PASSWORD=inventory_system_password
       - POSTGRES_USER=inventory_system
-
+    
 networks:
   default:
     external: true

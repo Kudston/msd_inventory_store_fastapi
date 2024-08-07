@@ -15,14 +15,20 @@ generate_revision:
 build_app_image:
 	docker build -t inventory_system .
 
+build_app_frontend:
+	docker build -t inventory_system_frontend .//src//frontend
+
 start_app:
 	docker compose -f .//docker//docker-compose.yml up -d
 
 stop_app:
 	docker compose -f .//docker//docker-compose.yml down --remove-orphans 
 
+start_app_frontend:
+	docker compose -f .//docker//docker-compose.yml up -d
+
 follow_app_log:
-	docker logs -f inventory_system
+	docker logs -f inventory_system_api
 
 follow_app_frontend_log:
 	docker logs -f inventory_system_frontend
