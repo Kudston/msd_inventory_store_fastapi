@@ -15,8 +15,8 @@ RUN python -m pip install --no-cache-dir -r requirements/prod.txt
 ADD . /usr/src/inventory_system/
 
 # Copy SSL certificates
-COPY ./src/backends/key.pem /app/src/backends/key.pem
-COPY ./src/backends/cert.pem /app/src/backends/cert.pem
+COPY ./src/backends/ssl/key.pem /inventory_system/src/backends/ssl/key.pem
+COPY ./src/backends/ssl/cert.pem /inventory_system/src/backends/ssl/cert.pem
 
 
 EXPOSE 8500

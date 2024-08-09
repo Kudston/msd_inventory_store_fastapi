@@ -27,8 +27,7 @@ services:
     image: inventory_system
     restart: unless-stopped
     ports:
-      - 8000:8500 # tcp
-      - 8101:8101 # ssl
+      - 8000:8500 # ssl
     build: 
       context: ../
       dockerfile: Dockerfile
@@ -36,8 +35,7 @@ services:
     volumes:
       - ./..:/usr/src/inventory_system
 
-    command: uvicorn src.backends.main:app --reload --port 8500 --host 0.0.0.0 --ssl-keyfile=./src/backends/ssl/key.pem --ssl-certfile=./src/backends/ssl/cert.pem
-
+    command: uvicorn src.backends.main:app --reload --port 8500 --host 0.0.0.0 --ssl-keyfile ./src/backends/ssl/key.pem --ssl-certfile ./src/backends/ssl/cert.pem
 
     environment:
       - APP_NAME=inventory_system
