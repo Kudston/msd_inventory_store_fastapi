@@ -1,4 +1,4 @@
-from src.backends.schemas import ParentPydantic
+from schemas import ParentPydantic
 from pydantic import constr
 from typing import List, Annotated, Optional
 from uuid import uuid4

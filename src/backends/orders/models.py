@@ -14,8 +14,8 @@ from sqlalchemy.orm import relationship, column_property
 from sqlalchemy.sql.functions import func
 from sqlalchemy.dialects import postgresql
 from sqlalchemy.sql import select
-from src.backends.database import Base
-from src.backends.products.models import Products
+from database import Base
+from products.models import Products
 
 class Orders(Base):
     __tablename__ = "orders"

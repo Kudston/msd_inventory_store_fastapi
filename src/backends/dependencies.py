@@ -11,13 +11,13 @@ from pydantic import ValidationError
 
 from fastapi import Header, HTTPException, status, Depends, Security
 from fastapi.security import SecurityScopes
-from src.backends.exceptions import invalid_auth_credentials_exception
-from src.backends.schemas import TokenData
-from src.backends.database import get_db_sess
+from exceptions import invalid_auth_credentials_exception
+from schemas import TokenData
+from database import get_db_sess
 
-from src.backends.security import get_user, oauth2_scheme
-from src.backends.config import Settings
-from src.backends.users.schemas import UserOut
+from security import get_user, oauth2_scheme
+from config import Settings
+from users.schemas import UserOut
 
 
 def has_admin_token_in_header(admin_access_token: str = Header()):

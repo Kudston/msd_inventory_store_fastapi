@@ -3,9 +3,9 @@ from typing import Any, Generic, TypeVar
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 from fastapi import FastAPI
-from src.backends.config import Settings
+from config import Settings
 from fastapi.openapi.utils import get_openapi
-from src.backends.exceptions import (
+from exceptions import (
     GeneralException,
     handle_bad_request_exception,
     handle_conflict_exception,
@@ -14,7 +14,7 @@ from src.backends.exceptions import (
     handle_file_too_large_exception,
 )
 
-from src.backends.users import schemas
+from users import schemas
 
 _T = TypeVar("_T")
 

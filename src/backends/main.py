@@ -3,12 +3,12 @@ from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from src.backends.database import engine, sessionLocal, open_db_connections, close_db_connections
-from src.backends import models
-from src.backends.Initialize_platform import initialize_superuser
-from src.backends.users.router import router as user_router
-from src.backends.products.router import router as product_router
-from src.backends.orders.router import router as order_router
+from database import engine, sessionLocal, open_db_connections, close_db_connections
+import models
+from Initialize_platform import initialize_superuser
+from users.router import router as user_router
+from products.router import router as product_router
+from orders.router import router as order_router
 import uvicorn
 import logging
 

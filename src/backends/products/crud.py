@@ -1,11 +1,11 @@
-from src.backends.products.models import Products
+from products.models import Products
 from sqlalchemy.orm import Session
-from src.backends.utils import OrderDirection,OrderBy
-from src.backends.products.enumerations import ProductsCategories
+from utils import OrderDirection,OrderBy
+from products.enumerations import ProductsCategories
 from typing import Union
 from pydantic import UUID4
 from sqlalchemy import asc, desc
-from src.backends.users.models import User
+from users.models import User
 
 class ProductsCrud:
     def __init__(self, db:Session) -> None:

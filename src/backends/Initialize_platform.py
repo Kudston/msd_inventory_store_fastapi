@@ -1,7 +1,7 @@
-from src.backends.database import get_db_sess, Session
-from src.backends.security import get_password_hash
-from src.backends.users.models import User
-from src.backends.config import Settings
+from database import get_db_sess, Session
+from security import get_password_hash
+from users.models import User
+from config import Settings
 
 def initialize_superuser():
     # db: Session = get_db_sess()

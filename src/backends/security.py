@@ -10,11 +10,11 @@ from jose import jwt
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.exceptions import HTTPException
 from fastapi import status
-from src.backends.exceptions import invalid_auth_credentials_exception
-from src.backends.users import models
-from src.backends.users.exceptions import UserNotFoundException
+from exceptions import invalid_auth_credentials_exception
+from users import models
+from users.exceptions import UserNotFoundException
 
-from src.backends.users.schemas import UserInDb
+from users.schemas import UserInDb
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 

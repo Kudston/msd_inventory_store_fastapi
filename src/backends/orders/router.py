@@ -1,6 +1,6 @@
 from fastapi import Depends, APIRouter, Query, Security
-from src.backends.orders.dependencies import initiate_order_service
-from src.backends.orders.schemas import (
+from orders.dependencies import initiate_order_service
+from orders.schemas import (
     OrderOut, 
     ManyOrdersOut, 
     CartOut, 
@@ -8,9 +8,9 @@ from src.backends.orders.schemas import (
     ManyMiniCartOut,
     OrderUpdate,
     )
-from src.backends.utils import OrderDirection, OrderBy
-from src.backends.orders.service import OrdersService
-from src.backends.services import handle_result
+from utils import OrderDirection, OrderBy
+from orders.service import OrdersService
+from services import handle_result
 from pydantic import UUID4
 from typing import Optional
 

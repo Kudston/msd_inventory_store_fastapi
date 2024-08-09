@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from src.backends.orders.schemas import (
+from orders.schemas import (
     OrderCreate, 
     OrderOut, 
     ManyOrdersOut, 
@@ -8,11 +8,11 @@ from src.backends.orders.schemas import (
     ManyMiniCartOut,
     ProductOut,
     )
-from src.backends.utils import OrderBy, OrderDirection
-from src.backends.services import ServiceResult
+from utils import OrderBy, OrderDirection
+from services import ServiceResult
 from typing import Union
-from src.backends.orders.crud import OrdersCrud
-from src.backends.users.schemas import UserOut
+from orders.crud import OrdersCrud
+from users.schemas import UserOut
 from sqlalchemy import UUID
 
 class OrdersService:

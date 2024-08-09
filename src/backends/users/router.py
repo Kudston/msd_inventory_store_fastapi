@@ -4,30 +4,30 @@ from fastapi import APIRouter, Depends, Query, Security
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 from fastapi.responses import FileResponse
 from typing import Optional
-from src.backends.dependencies import (
+from dependencies import (
     get_current_active_user,
     user_must_be_admin,
     get_db_sess,
     is_admin_token,
 )
 from sqlalchemy.orm import Session
-from src.backends.schemas import AccessToken
-from src.backends.services import handle_result, success_service_result
-from src.backends.users import schemas
-from src.backends.users.dependencies import (
+from schemas import AccessToken
+from services import handle_result, success_service_result
+from users import schemas
+from users.dependencies import (
     initiate_anonymous_user_service,
     initiate_user_service,
     get_settings,
 )
 
-from src.backends.users.schemas import (
+from users.schemas import (
     UserOut,
     UserCreate,
 )
-from src.backends.security import authenticate_user, create_access_token
+from security import authenticate_user, create_access_token
 
-from src.backends.users.services import UserService
-from src.backends.config import Settings
+from users.services import UserService
+from config import Settings
 
 router = APIRouter(prefix='/users',tags=['users'])
 
