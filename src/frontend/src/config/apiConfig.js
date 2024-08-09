@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://172.19.0.3:8500"; // Replace with your actual API base URL
+const API_BASE_URL = "https://172.18.0.3:8500"; // Replace with your actual API base URL
 
 export const API_URLS = {
   STOCKS: `${API_BASE_URL}/products`,

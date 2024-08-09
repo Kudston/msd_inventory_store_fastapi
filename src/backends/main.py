@@ -9,6 +9,7 @@ from src.backends.Initialize_platform import initialize_superuser
 from src.backends.users.router import router as user_router
 from src.backends.products.router import router as product_router
 from src.backends.orders.router import router as order_router
+import uvicorn
 import logging
 
 # Set up logging
@@ -29,7 +30,8 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 allowed_origins = [
-    "http://172.19.0.4:3000",
+    # "http://172.18.0.4:3000",
+    "*"
 ]
 
 app.add_middleware(
