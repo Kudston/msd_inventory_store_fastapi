@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { API_URLS } from '../config/apiConfig';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const AddProductForm = () => {

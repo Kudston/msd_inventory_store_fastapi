@@ -14,6 +14,9 @@ services:
     volumes:
       - ./../src/frontend:/app
 
+    ports:
+      - 3000:3000
+
     command: nohup npm start > outputs.log 2>&1 &
 
     depends_on:

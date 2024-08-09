@@ -1,6 +1,6 @@
 import React, { useState,  } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { API_URLS } from '../config/apiConfig';
 
 const DeleteCartComponent = () => {

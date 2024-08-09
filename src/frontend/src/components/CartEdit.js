@@ -49,14 +49,13 @@ function CartEdit() {
 
   const fetchAvailableProducts = async () => {
     const response = await fetch(`${API_URLS.STOCKS}?skip=0&limit=100`);
-    const data = await response.json();
+    const data = response.json();
     setAvailableProducts(data['products']);
   };
 
   const handleAddStock = async (new_product_detail) => {
-    console.log(new_product_detail);
     try {
-      const response = await fetch(`${API_URLS.CREATE_ORDER}`, {
+      await fetch(`${API_URLS.CREATE_ORDER}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
