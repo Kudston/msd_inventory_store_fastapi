@@ -45,7 +45,7 @@ def get_users(
     return handle_result(result=result, expected_schema=schemas.ManyUsersOut)
 
 @router.get(
-    '/get_user',
+    '/get-user',
     response_model=UserOut
 )
 def get_user(
@@ -56,7 +56,7 @@ def get_user(
     return handle_result(result, expected_schema=UserOut)
 
 @router.post(
-    '/create_user',
+    '/create-user',
     response_model=schemas.UserOut
 )
 def create_user(

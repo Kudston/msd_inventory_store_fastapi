@@ -1,8 +1,9 @@
-const API_BASE_URL = "https://172.18.0.3:8500"; // Replace with your actual API base URL
+const API_BASE_URL = "http://localhost:8080"; // Replace with your actual API base URL
 
 export const API_URLS = {
   STOCKS: `${API_BASE_URL}/products`,
   RECENT_ORDERS: `${API_BASE_URL}/orders/get-carts`,
+  SIGN_UP: `${API_BASE_URL}/users/create-user`,
   SIGN_IN: `${API_BASE_URL}/users/token`,
   EDIT_STOCKS: `${API_BASE_URL}/products/product-update`,
   GET_STOCK: `${API_BASE_URL}/products/product`,

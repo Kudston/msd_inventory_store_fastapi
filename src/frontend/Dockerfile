@@ -1,4 +1,4 @@
-FROM node:16
+FROM node:18
 
 WORKDIR /app
 
@@ -8,7 +8,7 @@ COPY . .
 
 COPY .env .
 
-RUN npm install
+RUN npm ci
 
 RUN npm run build
 

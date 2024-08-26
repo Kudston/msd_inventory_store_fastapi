@@ -22,9 +22,14 @@ stop_app:
 start_app_frontend:
 	docker compose -f .//docker//docker-compose.yml up -d
 
-follow_app_log:
+reload_nginx:
+	docker exec nginx nginx -s reload
+
+follow_app_api_log:
 	docker logs -f inventory_system_api
 
 follow_app_frontend_log:
 	docker logs -f inventory_system_frontend
-	docker logs -f inventory_system
+
+follow_app_nginx_log:
+	docker logs -f nginx

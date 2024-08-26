@@ -1,7 +1,19 @@
-# Use postgres/example user/password credentials
 version: '3.1'
 
 services:
+  nginx:
+    container_name: nginx
+    image: nginx
+    restart: unless-stopped
+    ports:
+      - 8080:80
+
+    volumes:
+      - ./../nginx.conf:/etc/nginx/nginx.conf:ro
+
+    depends_on:
+      - inventory_system_frontend
+
   inventory_system_frontend:
     container_name: inventory_system_frontend
     image: inventory_system_frontend
@@ -18,6 +30,7 @@ services:
       - 3000:3000
 
     command: nohup npm start > outputs.log 2>&1 &
+    # command: npm install
 
     depends_on:
       - inventory_system_api
@@ -27,7 +40,7 @@ services:
     image: inventory_system_api
     restart: unless-stopped
     ports:
-      - 8000:8500 # ssl
+      - 8000:8500
     build: 
       context: ./../src/backends
       dockerfile: Dockerfile
@@ -35,7 +48,8 @@ services:
     volumes:
       - ./../src/backends:/usr/src/inventory_system_backends
 
-    command: uvicorn main:app --reload --port 8500 --host 0.0.0.0 --ssl-keyfile ./ssl/key.pem --ssl-certfile ./ssl/cert.pem
+    command: uvicorn main:app --reload --port 8500 --host 0.0.0.0
+    #  --ssl-keyfile ./ssl/key.pem --ssl-certfile ./ssl/cert.pem
 
     environment:
       - APP_NAME=inventory_system

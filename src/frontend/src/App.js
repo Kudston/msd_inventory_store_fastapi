@@ -12,6 +12,7 @@ import CartCreate from './components/NewOrder';
 import DeleteCartComponent from './components/DeleteCart';
 import AddStockModal from './components/AddStocksToCart';
 import CheckoutPage from './components/CheckoutPage.js';
+import RegisterPage from './components/SignUp.js';
 
 function NavBar() {
   const { accessToken, setAccessToken } = useAuth();
@@ -74,6 +75,7 @@ function App() {
             <Route path="/delete-cart/:id" element={<DeleteCartComponent />} />
             <Route path="/add-cart-stock/:id" element={<AddStockModal />} />
             <Route path="/checkout/:id" element={<CheckoutPage />} />
+            <Route path='/signup' element={<RegisterPage />} />
           </Routes>
         </div>
       </Router>

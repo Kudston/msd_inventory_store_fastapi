@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { API_URLS } from '../config/apiConfig';
 
@@ -11,12 +11,11 @@ function SignIn() {
   
   const handleSubmit = async (e) => {
     e.preventDefault();
-    alert(API_URLS.SIGN_IN);
     try {
       const formData = new URLSearchParams();
       formData.append('username', username);
       formData.append('password', password);
-
+      
       const response = await fetch(API_URLS.SIGN_IN, {
         method: 'POST',
         headers: {
@@ -24,11 +23,11 @@ function SignIn() {
         },
         body: formData,
       });
-
+      
       if (!response.ok) {
         throw new Error('Sign in failed');
       }
-
+      
       const data = await response.json();
       if (data.access_token) {
         setAccessToken(data.access_token);
@@ -41,7 +40,7 @@ function SignIn() {
       alert('An error occurred. Please try again.');
     }
   };
-
+  
   return (
     <div className="container mt-5">
       <h2>Sign In</h2>
@@ -70,6 +69,9 @@ function SignIn() {
         </div>
         <button type="submit" className="btn btn-primary">Sign In</button>
       </form>
+      <div className="mt-3">
+        <p>Don't have an account? <Link to="/signup">Sign up here</Link></p>
+      </div>
     </div>
   );
 }
