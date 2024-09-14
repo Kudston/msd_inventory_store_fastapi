@@ -67,7 +67,7 @@ function Products() {
       <h2>Products</h2>
       <div className="row">
         <div className="col-md-8">
-          <p>Product information and management tools can go here.</p>
+          <p>Product information and management tools.</p>
         </div>
         <div className="col-md-8">
           <h3>Inventory Stocks</h3>

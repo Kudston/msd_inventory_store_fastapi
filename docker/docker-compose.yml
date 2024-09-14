@@ -6,19 +6,18 @@ services:
     image: nginx
     restart: unless-stopped
     ports:
-      - 8080:80
+      - 8900:85
 
     volumes:
       - ./../nginx.conf:/etc/nginx/nginx.conf:ro
+      # - ./../src/frontend/build:/urs/share/nginx/html
 
     depends_on:
       - inventory_system_frontend
 
   inventory_system_frontend:
     container_name: inventory_system_frontend
-    image: inventory_system_frontend
     restart: unless-stopped
-
     build:
       context: ./../src/frontend
       dockerfile: Dockerfile
@@ -30,17 +29,15 @@ services:
       - 3000:3000
 
     command: nohup npm start > outputs.log 2>&1 &
-    # command: npm install
 
     depends_on:
       - inventory_system_api
 
   inventory_system_api:
     container_name: inventory_system_api
-    image: inventory_system_api
     restart: unless-stopped
     ports:
-      - 8000:8500
+      - 8500:8500
     build: 
       context: ./../src/backends
       dockerfile: Dockerfile

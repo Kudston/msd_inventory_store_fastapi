@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://localhost:8080"; // Replace with your actual API base URL
+const API_BASE_URL = "api"; // Replace with your actual API base URL
 
 export const API_URLS = {
   STOCKS: `${API_BASE_URL}/products`,
