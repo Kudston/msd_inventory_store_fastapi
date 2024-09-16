@@ -2,9 +2,9 @@ from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
-from src.backends.config import Settings
+from config import Settings
 from alembic import context
-from src.backends.orders.models import *
+from orders.models import *
 
 app_settings = Settings()
 # this is the Alembic Config object, which provides

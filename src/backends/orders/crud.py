@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
-from src.backends.utils import OrderBy, OrderDirection
-from src.backends.orders.models import Carts,Orders
-from src.backends.products.models import Products
+from utils import OrderBy, OrderDirection
+from orders.models import Carts,Orders
+from products.models import Products
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql.functions import sum
 

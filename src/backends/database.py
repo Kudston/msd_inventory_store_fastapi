@@ -2,7 +2,7 @@ from fastapi import Depends
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
-from src.backends.config import Settings
+from config import Settings
 from typing import Optional, Iterable
 from sqlalchemy.engine import Engine as Database
 

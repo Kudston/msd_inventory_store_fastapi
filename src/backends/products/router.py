@@ -1,17 +1,17 @@
 from fastapi import APIRouter, Query, Depends, Response
-from src.backends.products.schemas import (
+from products.schemas import (
     ProductOut, 
     ProductCreate, 
     ManyProductsOut, 
     ProductUpdate,
     )
-from src.backends.products.service import ProductService
-from src.backends.products.dependencies import (initiate_product_service, 
+from products.service import ProductService
+from products.dependencies import (initiate_product_service, 
                                                 initiate_anonymous_product_service)
 from typing import Optional
 from pydantic import UUID4
-from src.backends.utils import OrderBy, OrderDirection
-from src.backends.services import handle_result
+from utils import OrderBy, OrderDirection
+from services import handle_result
 
 router = APIRouter(prefix='/products', tags=['products'])
 

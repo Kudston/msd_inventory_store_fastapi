@@ -10,8 +10,8 @@ from sqlalchemy import (
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects import postgresql
 from sqlalchemy.sql.functions import func
-from src.backends.database import Base
-from src.backends.users.models import User
+from database import Base
+from users.models import User
 
 class Products(Base):
     __tablename__ = "products"

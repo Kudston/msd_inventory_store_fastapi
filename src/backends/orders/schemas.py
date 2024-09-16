@@ -1,8 +1,8 @@
 from datetime import datetime
-from src.backends.schemas import ParentPydantic
+from schemas import ParentPydantic
 from pydantic import UUID4
 from typing import List, Optional
-from src.backends.products.schemas import ProductOut
+from products.schemas import ProductOut
 
 class OrderCreate(ParentPydantic):
     product_id: UUID4

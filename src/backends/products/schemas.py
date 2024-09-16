@@ -1,7 +1,7 @@
-from src.backends.schemas import ParentPydantic
+from schemas import ParentPydantic
 from datetime import datetime
 from pydantic import constr
-from src.backends.users.schemas import UserOut
+from users.schemas import UserOut
 from typing import List,Optional
 from pydantic import UUID4
 

@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
-from src.backends.users.schemas import UserOut, UserInDb
-from src.backends.products.crud import ProductsCrud
-from src.backends.products.schemas import ProductCreate, ProductOut, ManyProductsOut, ProductUpdate
-from src.backends.services import ServiceResult
+from users.schemas import UserOut, UserInDb
+from products.crud import ProductsCrud
+from products.schemas import ProductCreate, ProductOut, ManyProductsOut, ProductUpdate
+from services import ServiceResult
 from typing import Union
 from pydantic import UUID4
 

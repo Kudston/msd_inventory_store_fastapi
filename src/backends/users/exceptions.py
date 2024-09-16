@@ -1,4 +1,4 @@
-from src.backends.exceptions import GeneralException
+from exceptions import GeneralException
 
 
 class UserNotFoundException(GeneralException):

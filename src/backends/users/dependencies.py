@@ -2,14 +2,14 @@ from uuid import uuid4
 
 from sqlalchemy.orm import Session
 from fastapi import Depends, HTTPException
-from src.backends.dependencies import get_current_active_user
-from src.backends.config import Settings
-from src.backends.database import get_db_sess
-from src.backends.services import get_settings
-from src.backends.users.models import User
+from dependencies import get_current_active_user
+from config import Settings
+from database import get_db_sess
+from services import get_settings
+from users.models import User
 
-from src.backends.users.schemas import UserOut
-from src.backends.users.services import UserService
+from users.schemas import UserOut
+from users.services import UserService
 
 def initiate_user_service(
     current_user: UserOut = Depends(get_current_active_user),

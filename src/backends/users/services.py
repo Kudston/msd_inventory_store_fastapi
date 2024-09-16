@@ -1,10 +1,10 @@
 from sqlalchemy.orm import Session
-from src.backends.users.crud import UserCrud
-from src.backends.users.schemas import UserCreate, UserOut, ManyUsersOut
-from src.backends.exceptions import GeneralException
+from users.crud import UserCrud
+from users.schemas import UserCreate, UserOut, ManyUsersOut
+from exceptions import GeneralException
 from typing import Union
-from src.backends.services import ServiceResult
-from src.backends.config import Settings
+from services import ServiceResult
+from config import Settings
 
 class UserService:
     def __init__(self, requesting_user:UserOut, db: Session, app_settings: Settings) -> None:

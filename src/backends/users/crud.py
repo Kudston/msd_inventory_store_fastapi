@@ -1,6 +1,6 @@
-from src.backends.users.models import User
+from users.models import User
 from sqlalchemy.orm import Session
-from src.backends.security import get_password_hash
+from security import get_password_hash
 from typing import Union
 
 class UserCrud:
