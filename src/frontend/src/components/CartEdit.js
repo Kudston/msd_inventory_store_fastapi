@@ -16,13 +16,15 @@ function CartEdit() {
 
   useEffect(() => {
     if (accessToken) {
-      fetch(`${API_URLS.GET_CART}/?cart_id=${id}`, {
+      fetch(`${API_URLS.GET_CART}?cart_id=${id}`, {
         headers: {
+          'Content-Type': 'application/json',
           'Authorization': `Bearer ${accessToken}`
         }
       })
         .then(response => response.json())
         .then(data => {
+          console.log(data['total_amount']);
           setTotal(data['total_amount']);
           setItems(data['orders']);
           setCartStatus(data['status']);
@@ -33,8 +35,9 @@ function CartEdit() {
   }, [accessToken, id]);
 
   const fetchCartDetails = async () => {
-    fetch(`${API_URLS.GET_CART}/?cart_id=${id}`, {
+    fetch(`${API_URLS.GET_CART}?cart_id=${id}`, {
       headers: {
+        'Content-Type': 'application/json',
         'Authorization': `Bearer ${accessToken}`
       }
     })
@@ -75,7 +78,7 @@ function CartEdit() {
   };
 
   const updateItemQuantity = (itemId, newQuantity) => {
-    fetch(`${API_URLS.UPDATE_ORDER}/?order_id=${itemId}&order_counts=${newQuantity}`, {
+    fetch(`${API_URLS.UPDATE_ORDER}?order_id=${itemId}&order_counts=${newQuantity}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

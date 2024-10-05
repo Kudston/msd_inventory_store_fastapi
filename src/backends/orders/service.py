@@ -8,6 +8,7 @@ from orders.schemas import (
     ManyMiniCartOut,
     ProductOut,
     )
+from datetime import datetime
 from utils import OrderBy, OrderDirection
 from services import ServiceResult
 from typing import Union
@@ -149,6 +150,31 @@ class OrdersService:
         except Exception as raised_exception:
             return ServiceResult({}, success=False, exception=raised_exception)
     
+    def get_carts_statistics(
+        self,
+        start_date: datetime,
+        days_back: int,
+        skip,
+        limit,
+        order_direction: OrderDirection = OrderDirection.desc,
+        order_by: OrderBy = OrderBy.date_created,
+    ):
+        try:
+            carts_stats = self.crud.get_carts_statistics(
+                start_date=start_date,
+                days_back=days_back,
+                skip=skip,
+                limit=limit,
+                order_direction=order_direction,
+                order_by=order_by,
+            )
+            db_carts = {
+                'carts':[MiniCartOut.model_validate(cart.__dict__) for cart in carts_stats]
+            }
+            return ServiceResult(ManyMiniCartOut.model_validate(db_carts), success=True)
+        except:
+            return ServiceResult(data={}, success=False)
+
     def get_cart(
         self,
         cart_id: UUID

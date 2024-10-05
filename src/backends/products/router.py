@@ -16,7 +16,7 @@ from services import handle_result
 router = APIRouter(prefix='/products', tags=['products'])
 
 @router.get(
-    '/',
+    '',
     response_model= ManyProductsOut
 )
 def get_products(

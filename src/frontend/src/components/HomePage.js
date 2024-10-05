@@ -20,8 +20,9 @@ function HomePage() {
   useEffect(() => {
     if (accessToken) {
       // Fetch stocks
-      fetch(`${API_URLS.STOCKS}/?skip=0&limit=1000`, {
+      fetch(`${API_URLS.STOCKS}?skip=0&limit=1000`, {
         headers: {
+          'Content-Type': 'application/json',
           'Authorization': `Bearer ${accessToken}`
         }
       })
@@ -35,8 +36,9 @@ function HomePage() {
         });
 
       // Fetch orders
-      fetch(`${API_URLS.RECENT_ORDERS}/?skip=0&limit=1000&order_direction=desc&order_by=date_modified`, {
+      fetch(`${API_URLS.GET_CARTS}?skip=0&limit=1000&order_direction=desc&order_by=date_modified`, {
         headers: {
+          'Content-Type': 'application/json',
           'Authorization': `Bearer ${accessToken}`
         }
       })

@@ -14,6 +14,7 @@ function CartCreate() {
         fetch(`${API_URLS.CREATE_CART}`, {
           method: 'POST',
           headers: {
+            'Content-Type': 'application/json',
             'Authorization': `Bearer ${accessToken}`
           }
         })

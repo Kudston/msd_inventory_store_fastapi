@@ -11,8 +11,9 @@ function StockEdit() {
 
   useEffect(() => {
     if (accessToken) {
-      fetch(`${API_URLS.GET_STOCK}/?id=${id}`, {
+      fetch(`${API_URLS.GET_STOCK}?id=${id}`, {
         headers: {
+          'Content-Type': 'application/json',
           'Authorization': `Bearer ${accessToken}`
         }
       })
@@ -25,7 +26,7 @@ function StockEdit() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${API_URLS.EDIT_STOCKS}/?id=${id}`, {
+      const response = await fetch(`${API_URLS.EDIT_STOCKS}?id=${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

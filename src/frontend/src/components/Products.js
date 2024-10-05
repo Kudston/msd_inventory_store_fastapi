@@ -18,6 +18,7 @@ function Products() {
     if (accessToken) {
       fetch(API_URLS.STOCKS, {
         headers: {
+          'Content-Type': 'application/json',
           'Authorization': `Bearer ${accessToken}`
         }
       })

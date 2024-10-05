@@ -13,6 +13,7 @@ function CheckoutPage() {
     if (accessToken && cartId) {
       fetch(`${API_URLS.GET_CART}/${cartId}`, {
         headers: {
+          'Content-Type': 'application/json',
           'Authorization': `Bearer ${accessToken}`
         }
       })
@@ -26,6 +27,7 @@ function CheckoutPage() {
     fetch(`${API_URLS.CHECKOUT_CART}/${cartId}`, {
       method: 'POST',
       headers: {
+        'Content-Type': 'application/json',
         'Authorization': `Bearer ${accessToken}`
       }
     })

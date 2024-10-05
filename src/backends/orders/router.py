@@ -8,6 +8,7 @@ from orders.schemas import (
     ManyMiniCartOut,
     OrderUpdate,
     )
+from datetime import datetime
 from utils import OrderDirection, OrderBy
 from orders.service import OrdersService
 from services import handle_result
@@ -48,7 +49,7 @@ def get_carts(
     order_by: OrderBy = OrderBy.date_created,
     order_direction: OrderDirection = OrderDirection.desc,
     uncleared_only: bool = Query(False, description="Only returns carts that have not been cleared."),
-    order_service: OrdersService = Security(initiate_order_service)
+    order_service: OrdersService = Security(initiate_order_service),
 ):
     result = order_service.get_carts(
         skip=skip, 
@@ -57,6 +58,29 @@ def get_carts(
         order_by=order_by,
         order_direction=order_direction,
         )
+    return handle_result(result=result, expected_schema=ManyMiniCartOut)
+
+@router.get(
+        '/get-carts-statistics',
+        response_model=ManyMiniCartOut,
+)
+def get_carts_statistics(
+    skip: int =0,
+    limit: int =100,
+    order_by: OrderBy = OrderBy.date_created,
+    order_direction: OrderDirection = OrderDirection.desc,
+    start_date: datetime = datetime.now(),
+    days_back: int  = 5,
+    order_service: OrdersService = Security(initiate_order_service),
+):
+    result = order_service.get_carts_statistics(
+        start_date=start_date,
+        days_back=days_back,
+        skip=skip,
+        limit=limit,
+        order_direction=order_direction,
+        order_by=order_by,
+    )
     return handle_result(result=result, expected_schema=ManyMiniCartOut)
 
 @router.get(

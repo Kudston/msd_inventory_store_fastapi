@@ -20,8 +20,10 @@ function Carts() {
       if (unclearedParam) {
         setStatusFilter('uncleared');
       }
-      fetch(`${API_URLS.GET_CARTS}/?uncleared_only=${unclearedParam}`, {
+      fetch(`${API_URLS.GET_CARTS}?uncleared_only=${unclearedParam}`, {
+        method: 'GET',
         headers: {
+          'Content-Type': 'application/json',
           'Authorization': `Bearer ${accessToken}`
         }
       })
@@ -37,7 +39,7 @@ function Carts() {
   };
 
   const confirmCheckout = () => {
-    fetch(`${API_URLS.CHECKOUT_CART}/?cart_id=${currentCartId}`, {
+    fetch(`${API_URLS.CHECKOUT_CART}?cart_id=${currentCartId}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -12,9 +12,10 @@ const DeleteCartComponent = () => {
     const closeModal = () => setIsModalOpen(false);
   
     const handleDelete = () => {
-      fetch(`${API_URLS.DELETE_CART}/?cart_id=${id}`,{
+      fetch(`${API_URLS.DELETE_CART}?cart_id=${id}`,{
         method: "DELETE",
         headers: {
+            'Content-Type': 'application/json',
             'Authorization': `Bearer ${accessToken}`
         }
       })
