@@ -37,3 +37,16 @@ class ManyMiniCartOut(ParentPydantic):
 class OrderUpdate(ParentPydantic):
     order_id: UUID4
     counts: int
+
+class ProductsStatistics(ParentPydantic):
+    id: UUID4
+    title: str
+    total_amount: float
+    total_counts: int
+
+class StatisticsResponseOut(ParentPydantic):
+    total_amount: Optional[float]
+    total_cleared_amount: Optional[float]
+    total_uncleared_amount: Optional[float]
+    products_list: List[ProductsStatistics]
+

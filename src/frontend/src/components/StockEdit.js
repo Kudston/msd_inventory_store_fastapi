@@ -11,8 +11,9 @@ function StockEdit() {
 
   useEffect(() => {
     if (accessToken) {
-      fetch(`${API_URLS.GET_STOCK}/?id=${id}`, {
+      fetch(`${API_URLS.GET_STOCK}?id=${id}`, {
         headers: {
+          'Content-Type': 'application/json',
           'Authorization': `Bearer ${accessToken}`
         }
       })
@@ -25,7 +26,7 @@ function StockEdit() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${API_URLS.EDIT_STOCKS}/?id=${id}`, {
+      const response = await fetch(`${API_URLS.EDIT_STOCKS}?id=${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -47,6 +48,7 @@ function StockEdit() {
   return (
     <div className="container mt-4 col-5">
       <h2>Edit Stock: {stock.title}</h2>
+      <h2>Current in stock:<span className='text-info'>{stock.units}</span></h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="title" className="form-label">Title</label>
@@ -59,12 +61,12 @@ function StockEdit() {
           />
         </div>
         <div className="mb-3">
-          <label htmlFor="quantity" className="form-label">Quantity</label>
+          <label htmlFor="quantity" className="form-label">Quantity to add:</label>
           <input
             type="number"
             className="form-control"
             id="units"
-            value={stock.units}
+            value={0}
             onChange={(e) => setStock({...stock, units: parseInt(e.target.value)})}
             required
           />

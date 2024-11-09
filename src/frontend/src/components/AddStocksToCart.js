@@ -9,19 +9,19 @@ const AddStockComponent = ({ onAddStock, availableProducts, existingProducts }) 
   const searchInputRef = useRef(null);
 
   useEffect(() => {
+
     if (!Array.isArray(availableProducts)) return;
 
     const initialHiddenProducts = existingProducts.reduce((acc, product) => {
-      acc[product.id] = true;
+      acc[product.product_id] = true;
       return acc;
     }, {});
 
     setHiddenProducts(initialHiddenProducts);
-
     const filtered = availableProducts.filter(product =>
       product.title.toLowerCase().includes(searchTerm.toLowerCase())
     );
-
+    
     const sorted = filtered.sort((a, b) => {
       if (sortOrder === 'asc') {
         return a.title.localeCompare(b.title);

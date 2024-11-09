@@ -22,6 +22,9 @@ stop_app:
 start_app_frontend:
 	docker compose -f .//docker//docker-compose.yml up -d
 
+build_start_app:
+	docker compose -f .//docker//docker-compose.yml up -d --build
+
 reload_nginx:
 	docker exec nginx nginx -s reload
 

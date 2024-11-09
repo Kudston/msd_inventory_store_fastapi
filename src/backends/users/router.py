@@ -11,7 +11,7 @@ from dependencies import (
     is_admin_token,
 )
 from sqlalchemy.orm import Session
-from schemas import AccessToken
+from schemas import AccessToken, TokenData
 from services import handle_result, success_service_result
 from users import schemas
 from users.dependencies import (
@@ -76,12 +76,6 @@ def login(
     db: Session = Depends(get_db_sess),
     app_settings: Settings = Depends(get_settings),
 ):
-    """
-    Authenticates with the given credentials.
-
-    **Note**, passwords are case sensitive.
-    """
-
     try:
         user = authenticate_user(db, form_data.username, form_data.password)
 
@@ -106,8 +100,10 @@ def login(
         algorithm=app_settings.algorithm,
         expires_delta=access_token_expires,
     )
-    
+    token_data = TokenData.model_validate(access_token_data)
+
     token = success_service_result(AccessToken.model_validate({
-        "access_token":access_token
+        "access_token":access_token,
+        "token_data":token_data
         }))
     return handle_result(token, expected_schema=AccessToken)

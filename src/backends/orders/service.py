@@ -7,8 +7,12 @@ from orders.schemas import (
     MiniCartOut, 
     ManyMiniCartOut,
     ProductOut,
+    ProductsStatistics,
+    StatisticsResponseOut,
     )
-from utils import OrderBy, OrderDirection
+from datetime import datetime
+from utils import OrderBy, OrderDirection, DateRangeType
+from orders.utils import StatisticsOrderBy
 from services import ServiceResult
 from typing import Union
 from orders.crud import OrdersCrud
@@ -149,6 +153,34 @@ class OrdersService:
         except Exception as raised_exception:
             return ServiceResult({}, success=False, exception=raised_exception)
     
+    def get_carts_statistics(
+        self,
+        date_range_type: DateRangeType,
+        range_counts: int,
+        end_date: datetime,
+        skip,
+        limit,
+        order_direction: OrderDirection,
+        order_by: StatisticsOrderBy,
+    )->Union[ServiceResult, Exception]:
+        try:
+            carts_stats = self.crud.get_carts_statistics(
+                date_range_type=date_range_type,
+                range_counts=range_counts,
+                end_date=end_date,
+                skip=skip,
+                limit=limit,
+                order_direction=order_direction,
+                order_by=order_by,
+            )
+            carts_stats['products_list'] = [
+                ProductsStatistics.model_validate(productstat) for productstat in carts_stats['products_list']
+                ]
+
+            return ServiceResult(StatisticsResponseOut.model_validate(carts_stats), success=True)
+        except Exception as raised_exception:
+            return ServiceResult(data={}, success=False, exception=raised_exception)
+
     def get_cart(
         self,
         cart_id: UUID

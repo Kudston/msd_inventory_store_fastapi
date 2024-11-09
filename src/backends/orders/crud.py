@@ -1,9 +1,15 @@
 from sqlalchemy.orm import Session
-from utils import OrderBy, OrderDirection
+from utils import OrderBy, OrderDirection, DateRangeType
+from orders.utils import StatisticsOrderBy
 from orders.models import Carts,Orders
 from products.models import Products
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql.functions import sum
+from sqlalchemy import and_, func
+from datetime import datetime, timezone, timedelta, date
+from dateutil.relativedelta import relativedelta
+import pandas as pd
+
 
 class OrdersCrud:
     def __init__(self, db: Session) -> None:
@@ -100,17 +106,14 @@ class OrdersCrud:
                 if counts>db_order.product.units + db_order.counts:
                     raise Exception("New Counts Surpass the available quantity for this product.")
                 
-                new_product_count = ((counts - db_order.counts) if
-                                     (counts>db_order.counts) else (db_order.counts-counts))
-                setattr(db_product, 'units', db_product.units + new_product_count if
-                        (counts>db_order.counts) else db_product - new_product_count)
+                new_product_count = counts - db_order.counts
+                setattr(db_product, 'units', db_product.units - new_product_count)
                 setattr(db_order, "counts", counts)
 
             self.db.add(db_order)
             self.db.add(db_product)
             self.db.commit()
             self.db.refresh(db_order)
-            
             return db_order
         except Exception as raised_exception:
             raise raised_exception
@@ -136,7 +139,94 @@ class OrdersCrud:
         db_cart = self.db.query(Carts).filter(Carts.id==cart_id).first()
 
         return db_cart
-    
+
+    def get_carts_statistics(
+        self,
+        date_range_type: DateRangeType,
+        range_counts: int,
+        end_date: datetime,
+        skip,
+        limit,
+        order_direction: OrderDirection = OrderDirection.desc,
+        order_by: StatisticsOrderBy = StatisticsOrderBy.amount,
+    ):
+        ##NOW QUERY AND RETURN THE RESULTS
+        try:
+            
+            ##SET THE DATE RANGE OBJECT
+            end_date:datetime = end_date
+            start_date = date(end_date.year, end_date.month, end_date.day)
+
+            if date_range_type==DateRangeType.days:
+                if range_counts>1:
+                    counts = range_counts - 1
+                    start_date = start_date - timedelta(days=counts)
+            elif date_range_type==DateRangeType.weeks:
+                start_date = start_date - timedelta(days=end_date.weekday())
+                if range_counts>1:
+                    counts = range_counts -1
+                    start_date = start_date - timedelta(weeks=counts)
+            elif date_range_type==DateRangeType.months:
+                start_date = start_date - timedelta(days=start_date.day)
+                if range_counts>1:
+                    counts = range_counts - 1
+                    start_date = start_date - relativedelta(months=counts)
+
+            carts = self.db.query(Carts)
+
+            carts = carts.filter(
+                and_(
+                    Carts.date_created>=start_date,
+                    Carts.date_created<=end_date,
+                )
+            )
+            
+            cleared_carts = carts.filter(Carts.status==True)
+            uncleared_carts = carts.filter(Carts.status==False)
+
+            total_amount  = carts.with_entities(func.sum(Carts.total_amount)).scalar()
+            cleared_total_amount = cleared_carts.with_entities(func.sum(Carts.total_amount)).scalar()
+            uncleared_total_amount = uncleared_carts.with_entities(func.sum(Carts.total_amount)).scalar()
+            
+            grouped_carts = (carts.join(Carts.orders).
+                             join(Orders.product).
+                                group_by(Orders.product_id, Products.title).
+                                with_entities(
+                                    Orders.product_id,
+                                    Products.title,
+                                    func.sum(Orders.total_amount),
+                                    func.sum(Orders.counts),
+                                    ))
+            products_list_dict = []
+
+            for id, title, totamt, cnts in grouped_carts:
+                products_list_dict.append(
+                    {
+                        "id":id,
+                        "title":title,
+                        "total_amount":totamt,
+                        "total_counts":cnts,
+                    }
+                )
+            
+            set_order_by = "total_amount" if (order_by==StatisticsOrderBy.amount) else "total_counts"
+            direction = True if order_direction==OrderDirection.desc else False
+
+            products_list_dict = sorted(products_list_dict,
+                                        key = lambda product: product[set_order_by], reverse=direction)
+
+            response_object = {
+                "total_amount":total_amount if total_amount else 0,
+                "total_cleared_amount":cleared_total_amount if cleared_total_amount else 0,
+                "total_uncleared_amount":uncleared_total_amount if uncleared_total_amount else 0,
+                "products_list":products_list_dict,
+            }
+
+            return response_object
+        except Exception as raised_exception:
+            raise raised_exception
+
+
     def get_carts(
         self,
         order_by: OrderBy,

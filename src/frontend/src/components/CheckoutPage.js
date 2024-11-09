@@ -13,6 +13,7 @@ function CheckoutPage() {
     if (accessToken && cartId) {
       fetch(`${API_URLS.GET_CART}/${cartId}`, {
         headers: {
+          'Content-Type': 'application/json',
           'Authorization': `Bearer ${accessToken}`
         }
       })
@@ -26,13 +27,14 @@ function CheckoutPage() {
     fetch(`${API_URLS.CHECKOUT_CART}/${cartId}`, {
       method: 'POST',
       headers: {
+        'Content-Type': 'application/json',
         'Authorization': `Bearer ${accessToken}`
       }
     })
       .then(response => response.json())
       .then(data => {
         console.log('Checkout successful:', data);
-        navigate('/carts'); // Redirect to carts page after successful checkout
+        navigate('/carts');
       })
       .catch(error => console.error('Error during checkout:', error));
   };
