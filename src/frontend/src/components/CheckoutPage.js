@@ -34,7 +34,7 @@ function CheckoutPage() {
       .then(response => response.json())
       .then(data => {
         console.log('Checkout successful:', data);
-        navigate('/carts'); // Redirect to carts page after successful checkout
+        navigate('/carts');
       })
       .catch(error => console.error('Error during checkout:', error));
   };

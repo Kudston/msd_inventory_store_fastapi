@@ -6,7 +6,7 @@ import { API_URLS } from '../config/apiConfig';
 function Carts() {
   const { uncleared } = useParams();
   const [carts, setCarts] = useState([]);
-  const { accessToken } = useAuth();
+  const { accessToken, user } = useAuth();
   const [statusFilter, setStatusFilter] = useState('');
   const [amountFilter, setAmountFilter] = useState('');
   const [amountComparison, setAmountComparison] = useState('greater');
@@ -20,7 +20,7 @@ function Carts() {
       if (unclearedParam) {
         setStatusFilter('uncleared');
       }
-      fetch(`${API_URLS.GET_CARTS}?uncleared_only=${unclearedParam}`, {
+      fetch(`${API_URLS.GET_CARTS}?uncleared_only=${unclearedParam}&order_by=date_modified&order_direction=desc`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -48,7 +48,6 @@ function Carts() {
     })
       .then(response => response.json())
       .then(data => {
-        // Handle successful checkout, e.g., update the cart status
         setCarts(prevCarts =>
           prevCarts.map(cart =>
             cart.id === currentCartId ? { ...cart, status: true } : cart
@@ -60,6 +59,19 @@ function Carts() {
         console.error('Error during checkout:', error);
         setShowModal(false);
       });
+  };
+
+  const formatDateTime = (dateString) => {
+    const options = {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: true
+    };
+    return new Date(dateString).toLocaleString('en-US', options);
   };
 
   const filteredCarts = carts
@@ -85,6 +97,10 @@ function Carts() {
         return b.total_amount - a.total_amount;
       }
     });
+
+    if (!accessToken) {
+      return <div className="text-center mt-4">Please sign in to view the dashboard.</div>;
+    }
 
   return (
     <div className="container mt-4">
@@ -140,7 +156,7 @@ function Carts() {
             {filteredCarts.map(cart => (
               <li key={cart.id} className="list-group-item my-3 position-relative">
                 <div className="d-flex justify-content-between align-items-center">
-                  <h3 className="mb-0">Cart ID: {cart.id}</h3>
+                  <h3 className="mb-0">Cart Created On: {formatDateTime(cart.date_created)}</h3>
                   <span className={`badge ${cart.status ? 'bg-success' : 'bg-danger'}`}>
                     {cart.status ? 'Cleared' : 'Uncleared'}
                   </span>
@@ -151,24 +167,30 @@ function Carts() {
                 {!cart.status && (
                   <div className="mt-2 d-flex">
                     <Link to={`/cart-edit/${cart.id}`} className="btn btn-primary btn-sm me-3">Update</Link>
-                    <button
-                      onClick={() => handleCheckout(cart.id)}
-                      className="btn btn-success btn-sm me-3"
-                    >
-                      Checkout
-                    </button>
-                    <Link 
-                      to={`/delete-cart/${cart.id}`} 
-                      className="btn btn-danger btn-sm position-absolute"
-                      style={{ bottom: '10px', right: '10px' }}
-                    >
-                      Delete
-                    </Link>
+                    
+                    {user.is_admin && (
+                      <>
+                        <button
+                          onClick={() => handleCheckout(cart.id)}
+                          className="btn btn-success btn-sm me-3"
+                        >
+                          Checkout
+                        </button>
+                        <Link 
+                          to={`/delete-cart/${cart.id}`} 
+                          className="btn btn-danger btn-sm position-absolute"
+                          style={{ bottom: '10px', right: '10px' }}
+                        >
+                          Delete
+                        </Link>
+                      </>
+                    )}
                   </div>
                 )}
                 {cart.status && (
                   <div className="mt-2">
-                    <span className="text-muted">Cart is pending clearance</span>
+                    <span className="text-muted">Cart is cleared</span>
+                    <Link to={`/cart-edit/${cart.id}`} className="btn btn-primary btn-sm">Details</Link>
                   </div>
                 )}
               </li>

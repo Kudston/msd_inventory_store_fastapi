@@ -48,6 +48,7 @@ function StockEdit() {
   return (
     <div className="container mt-4 col-5">
       <h2>Edit Stock: {stock.title}</h2>
+      <h2>Current in stock:<span className='text-info'>{stock.units}</span></h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="title" className="form-label">Title</label>
@@ -60,12 +61,12 @@ function StockEdit() {
           />
         </div>
         <div className="mb-3">
-          <label htmlFor="quantity" className="form-label">Quantity</label>
+          <label htmlFor="quantity" className="form-label">Quantity to add:</label>
           <input
             type="number"
             className="form-control"
             id="units"
-            value={stock.units}
+            value={0}
             onChange={(e) => setStock({...stock, units: parseInt(e.target.value)})}
             required
           />

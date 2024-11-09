@@ -6,7 +6,7 @@ import { API_URLS } from '../config/apiConfig';
 function SignIn() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const { setAccessToken } = useAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
   
   const handleSubmit = async (e) => {
@@ -29,8 +29,13 @@ function SignIn() {
       }
       
       const data = await response.json();
+      
       if (data.access_token) {
-        setAccessToken(data.access_token);
+        const userData = {
+          username: data.token_data.user_name,
+          is_admin: data.token_data.is_admin,
+        };
+        login(data.access_token, userData);
         navigate('/');
       } else {
         alert('Sign in failed. Please try again.');

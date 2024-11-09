@@ -5,8 +5,12 @@ services:
     container_name: nginx
     image: nginx
     restart: unless-stopped
+
     ports:
-      - 8900:85
+      - "${NGINX_PORT:-8400}:85"
+
+    env_file:
+      - ./../.env
 
     volumes:
       - ./../nginx.conf:/etc/nginx/nginx.conf:ro
@@ -24,10 +28,9 @@ services:
     volumes:
       - ./../src/frontend:/app
 
-    ports:
-      - 3000:3000
+    env_file:
+      - ./../.env
 
-    # command: serve -s build
     command: npm start
 
     depends_on:
@@ -46,18 +49,9 @@ services:
       - ./../src/backends:/usr/src/inventory_system_backends
 
     command: uvicorn main:app --reload --port 8500 --host 0.0.0.0
-    #  --ssl-keyfile ./ssl/key.pem --ssl-certfile ./ssl/cert.pem
 
-    environment:
-      - APP_NAME=inventory_system
-      - db_name=inventory_system
-      - db_user=inventory_system
-      - db_password=inventory_system_password
-      - db_host=inventory_db
-      - db_port=5432
-
-      - ADMIN_USER_NAME=msd_superuser
-      - ADMIN_PASSWORD=mds_super_password
+    env_file:
+      - ./../.env
 
     depends_on:
       - inventory_db
@@ -71,10 +65,10 @@ services:
 
     ports:
       - '5432:5432'
-    environment:
-      - POSTGRES_PASSWORD=inventory_system_password
-      - POSTGRES_USER=inventory_system
-    
+
+    env_file:
+      - ./../.env
+
 networks:
   default:
     external: true

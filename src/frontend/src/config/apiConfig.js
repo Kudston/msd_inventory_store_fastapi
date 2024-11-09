@@ -1,4 +1,4 @@
-const API_BASE_URL = "api"; // Replace with your actual API base URL
+const API_BASE_URL = "/api"; // Replace with your actual API base URL
 
 export const API_URLS = {
   STOCKS: `${API_BASE_URL}/products`,
@@ -14,5 +14,6 @@ export const API_URLS = {
   UPDATE_ORDER: `${API_BASE_URL}/orders/update-units`,
   CREATE_ORDER: `${API_BASE_URL}/orders`,
   CHECKOUT_CART: `${API_BASE_URL}/orders/checkout`,
+  PRODUCTS_STATISTICS: `${API_BASE_URL}/orders/get-carts-statistics`,
   // Add more endpoints as needed
 };

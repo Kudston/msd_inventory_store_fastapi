@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Link, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import HomePage from './components/HomePage';
 import Carts from './components/Carts';
@@ -13,15 +13,16 @@ import DeleteCartComponent from './components/DeleteCart';
 import AddStockModal from './components/AddStocksToCart';
 import CheckoutPage from './components/CheckoutPage.js';
 import RegisterPage from './components/SignUp.js';
+import StatisticsDashboard from './components/StatisticsPage.js';
 
 function NavBar() {
-  const { accessToken, setAccessToken } = useAuth();
+  const { accessToken, logout, user } = useAuth();
   const handleSignOut = () => {
-    setAccessToken(null);
+    logout();
   };
 
   return (
-    <header className='bg-primary text-white'>
+    <header className='bg-primary text-white fixed-top'>
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <div className="container">
           <Link className="navbar-brand text-primary fs-4" to="/">DominionInventory</Link>
@@ -36,10 +37,15 @@ function NavBar() {
               <li className="nav-item">
                 <Link className="nav-link text-primary fs-5" to="/products">Products</Link>
               </li>
-              {accessToken ? (
-                <li className="nav-item">
-                  <button className="nav-link btn btn-link text-primary fs-5" onClick={handleSignOut}>Sign Out</button>
-                </li>
+              {accessToken && user ? (
+                <>
+                  <li className="nav-item">
+                    <span className="nav-link text-success fs-5">Welcome, {user.username}!</span>
+                  </li>
+                  <li className="nav-item">
+                    <button className="nav-link btn btn-link text-primary fs-5" onClick={handleSignOut}>Sign Out</button>
+                  </li>
+                </>
               ) : (
                 <li className="nav-item">
                   <Link className="nav-link text-primary fs-5" to="/signin">Sign In</Link>
@@ -63,20 +69,24 @@ function App() {
       <Router>
         <div className="App">
           <NavBar />
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/carts/:uncleared" element={<Carts />} />
-            <Route path="/products" element={<Products />} />
-            <Route path="/signin" element={<SignIn />} />
-            <Route path="/stock-edit/:id" element={<StockEdit />} />
-            <Route path="/cart-edit/:id" element={<CartEdit />} />
-            <Route path="/add-product" element={<AddProductForm />} />
-            <Route path="/cart-create" element={<CartCreate />} />
-            <Route path="/delete-cart/:id" element={<DeleteCartComponent />} />
-            <Route path="/add-cart-stock/:id" element={<AddStockModal />} />
-            <Route path="/checkout/:id" element={<CheckoutPage />} />
-            <Route path='/signup' element={<RegisterPage />} />
-          </Routes>
+          <div style={{ paddingTop: '180px' }}> {/* Adjust this value based on your navbar height */}
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/carts" element={<Navigate to="/carts/false" replace />} />
+              <Route path="/carts/:uncleared" element={<Carts />} />
+              <Route path="/products" element={<Products />} />
+              <Route path="/signin" element={<SignIn />} />
+              <Route path="/stock-edit/:id" element={<StockEdit />} />
+              <Route path="/cart-edit/:id" element={<CartEdit />} />
+              <Route path="/add-product" element={<AddProductForm />} />
+              <Route path="/cart-create" element={<CartCreate />} />
+              <Route path="/delete-cart/:id" element={<DeleteCartComponent />} />
+              <Route path="/add-cart-stock/:id" element={<AddStockModal />} />
+              <Route path="/checkout/:id" element={<CheckoutPage />} />
+              <Route path='/signup' element={<RegisterPage />} />
+              <Route path='/statistics' element={<StatisticsDashboard />} />
+            </Routes>
+          </div>
         </div>
       </Router>
     </AuthProvider>

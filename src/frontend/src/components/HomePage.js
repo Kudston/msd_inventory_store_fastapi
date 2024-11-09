@@ -20,6 +20,7 @@ function HomePage() {
   useEffect(() => {
     if (accessToken) {
       // Fetch stocks
+      alert(process.env.REACT_APP_WEBSITE_NAME);
       fetch(`${API_URLS.STOCKS}?skip=0&limit=1000`, {
         headers: {
           'Content-Type': 'application/json',
@@ -65,7 +66,7 @@ function HomePage() {
 
   return (
     <div className="container-fluid mt-4">
-      <h1 className="mb-4">DominionInventory Dashboard</h1>
+      <h1 className="mb-4 text-center">Inventory Dashboard</h1>
       
       <div className="row mb-4">
         <div className="col-md-6">
@@ -74,6 +75,7 @@ function HomePage() {
         <div className="col-md-6">
           <div className="d-flex justify-content-between align-items-center">
             <Link to={'/cart-create'} className='btn btn-primary'>Create New Order</Link>
+            <Link to={'/statistics'} className='btn btn-primary'>statistics</Link>
             <Link to={'/carts/true'} className='btn btn-warning'>
               Uncleared Orders <span className="badge bg-secondary">{unclearedOrdersCount}</span>
             </Link>

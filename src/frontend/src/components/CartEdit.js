@@ -13,6 +13,7 @@ function CartEdit() {
   const [cart_total, setTotal] = useState(0);
   const [cart_status, setCartStatus] = useState();
   const [availableProducts, setAvailableProducts] = useState([]);
+  const [ loading, setLoading ] = useState(true);
 
   useEffect(() => {
     if (accessToken) {
@@ -24,18 +25,18 @@ function CartEdit() {
       })
         .then(response => response.json())
         .then(data => {
-          console.log(data['total_amount']);
           setTotal(data['total_amount']);
           setItems(data['orders']);
           setCartStatus(data['status']);
         })
         .catch(error => console.error('Error fetching stock:', error));
+        fetchAvailableProducts();
+        setLoading(false);
     }
-    fetchAvailableProducts();
   }, [accessToken, id]);
-
+  
   const fetchCartDetails = async () => {
-    fetch(`${API_URLS.GET_CART}?cart_id=${id}`, {
+    await fetch(`${API_URLS.GET_CART}?cart_id=${id}`, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${accessToken}`
@@ -51,13 +52,18 @@ function CartEdit() {
   };
 
   const fetchAvailableProducts = async () => {
-    const response = await fetch(`${API_URLS.STOCKS}?skip=0&limit=100`);
-    const data = response.json();
-    setAvailableProducts(data['products']);
+    try {
+      const response = await fetch(`${API_URLS.STOCKS}?skip=0&limit=100`);
+      const data = await response.json();
+      setAvailableProducts(data['products']);
+    } catch (error) {
+      console.error('Error fetching available products:', error);
+    }
   };
 
   const handleAddStock = async (new_product_detail) => {
     try {
+      console.log("new stock "+new_product_detail.order_counts);
       await fetch(`${API_URLS.CREATE_ORDER}`, {
         method: 'POST',
         headers: {
@@ -71,22 +77,26 @@ function CartEdit() {
         })
       });
 
-      fetchCartDetails();
+      await fetchCartDetails();
     } catch (error) {
       console.error('Error adding stock:', error);
     }
   };
 
-  const updateItemQuantity = (itemId, newQuantity) => {
-    fetch(`${API_URLS.UPDATE_ORDER}?order_id=${itemId}&order_counts=${newQuantity}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${accessToken}`
-      }
-    })
-    .then(response => response.json())
-    .then(data => {
+  const updateItemQuantity = async (itemId, newQuantity) => {
+    try {
+      console.log("quantities");
+      console.log(newQuantity);
+      const response = await fetch(`${API_URLS.UPDATE_ORDER}?order_id=${itemId}&order_counts=${newQuantity}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`
+        }
+      });
+  
+      const data = await response.json();
+  
       setItems(prevItems => {
         const updatedItems = prevItems.map(item =>
           item.id === itemId ? { ...item, counts: newQuantity, total_amount: item.product.price * newQuantity } : item
@@ -94,12 +104,14 @@ function CartEdit() {
         setTotal(updatedItems.reduce((sum, item) => sum + item.total_amount, 0));
         return updatedItems;
       });
-    })
-    .catch(error => console.error('Error updating quantity:', error));
+      
+    } catch (error) {
+      console.error('Error updating quantity:', error);
+    }
   };
-
-  if (!id) {
-    return <div>Loading...</div>;
+  
+  if (!accessToken || !id) {
+    return <div className="text-center mt-4">Please sign in to view the dashboard.</div>;
   }
 
   return (
@@ -107,8 +119,9 @@ function CartEdit() {
       <div className="col-md-7">
         <h2 className="mb-4">Cart Detail: {id}</h2>
         <CartItems 
-          items={items} 
-          onUpdateQuantity={updateItemQuantity} 
+          items={items}
+          onUpdateQuantity={updateItemQuantity}
+          cart_status={ cart_status }
         />
         <div className="mt-4">
           {!cart_status && (
@@ -121,25 +134,32 @@ function CartEdit() {
             className="btn btn-secondary"
             onClick={() => navigate('/carts/false')}
           >
-            Cancel
+            Back
           </button>
         </div>
       </div>
 
+      
       <div className="col-md-5">
         <h2 className="mb-4">Cart Summary</h2>
         <p className="lead">Total Amount: #{cart_total}</p>
+        {!cart_status &&(
+          <>
         <div className="col-md-5">
             <Link to={`/checkout/${id}`}> Checkout Cart </Link>
-          </div>
+        </div>
+        
         <h2 className='my-5 text-center text-primary'>Add New Stock</h2>
         <div className='col-12'>
-          <AddStockComponent 
-            onAddStock={handleAddStock} 
-            availableProducts={availableProducts} 
+          <AddStockComponent
+            onAddStock={handleAddStock}
+            availableProducts={availableProducts}
             existingProducts={ items }
           />
         </div>
+
+      </>
+        )}
       </div>
     </div>
   );

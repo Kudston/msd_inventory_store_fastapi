@@ -7,15 +7,28 @@ from orders.schemas import (
     OrderCreate,
     ManyMiniCartOut,
     OrderUpdate,
+    StatisticsResponseOut,
     )
 from datetime import datetime
-from utils import OrderDirection, OrderBy
+from utils import OrderDirection, OrderBy, DateRangeType
+from orders.utils import StatisticsOrderBy
 from orders.service import OrdersService
 from services import handle_result
 from pydantic import UUID4
 from typing import Optional
 
 router = APIRouter(tags=['orders'], prefix='/orders')
+
+@router.post(
+    '',
+    response_model=OrderOut 
+)
+def create_order(
+    order_info: OrderCreate,
+    order_service: OrdersService = Security(initiate_order_service)
+):
+    result = order_service.create_order(order_info=order_info)
+    return handle_result(result=result, expected_schema=OrderOut)
 
 @router.get(
     '/get-order',
@@ -62,26 +75,28 @@ def get_carts(
 
 @router.get(
         '/get-carts-statistics',
-        response_model=ManyMiniCartOut,
+        response_model=StatisticsResponseOut,
 )
 def get_carts_statistics(
-    skip: int =0,
-    limit: int =100,
-    order_by: OrderBy = OrderBy.date_created,
+    skip = 0,
+    limit = 100,
+    end_date: datetime = datetime.now(),
+    date_range_type: DateRangeType = DateRangeType.weeks,
+    range_counts: int = 5,
     order_direction: OrderDirection = OrderDirection.desc,
-    start_date: datetime = datetime.now(),
-    days_back: int  = 5,
+    order_by: StatisticsOrderBy = StatisticsOrderBy.amount,
     order_service: OrdersService = Security(initiate_order_service),
 ):
     result = order_service.get_carts_statistics(
-        start_date=start_date,
-        days_back=days_back,
+        date_range_type=date_range_type,
+        range_counts=range_counts,
+        end_date=end_date,
         skip=skip,
         limit=limit,
         order_direction=order_direction,
-        order_by=order_by,
+        order_by=order_by
     )
-    return handle_result(result=result, expected_schema=ManyMiniCartOut)
+    return handle_result(result=result, expected_schema=StatisticsResponseOut)
 
 @router.get(
     '/get-cart',
@@ -93,17 +108,6 @@ def get_cart(
 ):
     result = order_service.get_cart(cart_id=cart_id)
     return handle_result(result=result, expected_schema=CartOut)
-
-@router.post(
-    '/',
-    response_model=OrderOut 
-)
-def create_order(
-    order_info: OrderCreate,
-    order_service: OrdersService = Security(initiate_order_service)
-):
-    result = order_service.create_order(order_info=order_info)
-    return handle_result(result=result, expected_schema=OrderOut)
 
 @router.post(
     '/cart-initiate',
