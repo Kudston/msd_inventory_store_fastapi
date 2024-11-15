@@ -16,7 +16,7 @@ class Settings:
 
         self.admin_username = os.getenv('ADMIN_USER_NAME', 'msd_super_user')
         self.admin_password = os.getenv('ADMIN_PASSWORD', 'admin_password')
-        print(self.admin_password)
+        
 
     def get_full_db_url(self):
         return f'postgresql://{self.db_user}:{self.db_password}@{self.db_host}:{self.db_port}/{self.db_name}'
